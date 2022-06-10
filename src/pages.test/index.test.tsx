@@ -11,10 +11,30 @@ describe('Index page', () => {
       render(<Index />);
 
       const heading = screen.getByRole('heading', {
-        name: /Boilerplate code/,
+        name: /Pokemon App/,
       });
 
       expect(heading).toBeInTheDocument();
+    });
+
+    it('should have button tag with text capture pokemon', () => {
+      render(<Index />);
+
+      const button = screen.getByRole('button', {
+        name: /capture pokemon/,
+      });
+
+      expect(button).toBeInTheDocument();
+    });
+
+    it('should have button tag with text release pokemon', () => {
+      render(<Index />);
+
+      const button = screen.getByRole('button', {
+        name: /release pokemon/,
+      });
+
+      expect(button).toBeInTheDocument();
     });
   });
 });
