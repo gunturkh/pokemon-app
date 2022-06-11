@@ -4,15 +4,25 @@ import { persist } from 'zustand/middleware';
 const usePokemon = create(
   persist(
     (set) => ({
-      pokemonList: [],
+      pokemonDetail: {},
+      pokemonList: {},
+      myPokemonList: [],
+      fetchPokemonList: async (url: string) => {
+        const response = await fetch(url);
+        set({ pokemonList: await response.json() });
+      },
+      fetchPokemonDetail: async (url: string) => {
+        const response = await fetch(url);
+        set({ pokemonDetail: await response.json() });
+      },
       capturePokemon: (params: any) => {
         set((state: any) => ({
-          pokemonList: [...state.pokemonList, params],
+          myPokemonList: [...state.myPokemonList, params],
         }));
       },
       releasePokemon: (params: any) =>
         set((state: any) => ({
-          pokemonList: state.pokemonList.filter(
+          myPokemonList: state.myPokemonList.filter(
             (item: any) => item.id !== params.id
           ),
         })),
