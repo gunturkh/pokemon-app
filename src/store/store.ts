@@ -23,7 +23,7 @@ const usePokemon = create(
       releasePokemon: (params: any) =>
         set((state: any) => ({
           myPokemonList: state.myPokemonList.filter(
-            (item: any) => item.id !== params.id
+            (item: any) => item.aid !== params.aid
           ),
         })),
     }),

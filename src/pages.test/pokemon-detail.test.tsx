@@ -1,50 +1,41 @@
 import { render, screen } from '@testing-library/react';
 
-import Index from '@/pages/index';
+import PokemonDetailPage from '@/pages/pokemon-detail';
 
 // The easiest solution to mock `next/router`: https://github.com/vercel/next.js/issues/7479
 // The mock has been moved to `__mocks__` folder to avoid duplication
 
-describe('Index page', () => {
+describe('Pokemon detail page', () => {
   describe('Render method', () => {
     it('should have h1 tag', () => {
-      render(<Index />);
+      render(<PokemonDetailPage />);
 
       const heading = screen.getByRole('heading', {
-        name: /Pokemon App/,
+        name: /Pokemon Detail/,
       });
 
       expect(heading).toBeInTheDocument();
     });
 
-    it('should have link tag with text My Pokemon List', () => {
-      render(<Index />);
+    it('should have link tag with text Pokemon List', () => {
+      render(<PokemonDetailPage />);
 
       const link = screen.getByRole('link', {
-        name: /My Pokemon List/,
+        name: /Pokemon List/,
       });
 
       expect(link).toBeInTheDocument();
     });
 
-    it('should have button tag with text << Previous', () => {
-      render(<Index />);
+    it('should have button tag with text Capture Pokemon', () => {
+      render(<PokemonDetailPage />);
 
       const button = screen.getByRole('button', {
-        name: /<< Previous/,
+        name: /Capture Pokemon/,
       });
 
       expect(button).toBeInTheDocument();
     });
 
-    it('should have button tag with text Next >>', () => {
-      render(<Index />);
-
-      const button = screen.getByRole('button', {
-        name: /Next >>/,
-      });
-
-      expect(button).toBeInTheDocument();
-    });
   });
 });

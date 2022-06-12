@@ -1,17 +1,64 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/solid';
-import { Fragment } from 'react';
+import Link from 'next/link';
+import { Fragment, useEffect, useState } from 'react';
 
+import type { Pokemon } from '@/_prototype';
 import usePokemon from '@/store/store';
 
-function MenuButton(pokemon) {
+const DeleteInactiveIcon = (props: any) => {
+  return (
+    <svg
+      {...props}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x="5"
+        y="6"
+        width="10"
+        height="10"
+        fill="#EDE9FE"
+        stroke="#A78BFA"
+        strokeWidth="2"
+      />
+      <path d="M3 6H17" stroke="#A78BFA" strokeWidth="2" />
+      <path d="M8 6V4H12V6" stroke="#A78BFA" strokeWidth="2" />
+    </svg>
+  );
+};
+
+function DeleteActiveIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x="5"
+        y="6"
+        width="10"
+        height="10"
+        fill="#8B5CF6"
+        stroke="#C4B5FD"
+        strokeWidth="2"
+      />
+      <path d="M3 6H17" stroke="#C4B5FD" strokeWidth="2" />
+      <path d="M8 6V4H12V6" stroke="#C4B5FD" strokeWidth="2" />
+    </svg>
+  );
+}
+const MenuButton = ({ pokemon }: { pokemon: Partial<Pokemon> }) => {
   const releasePokemon = usePokemon((state: any) => state.releasePokemon);
 
   return (
-    <div className="top-16 w-56 text-right">
-      <Menu as="div" className="relative inline-block text-left">
+    <div className="top-16 w-56">
+      <Menu as={'div'} className="relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <Menu.Button className="mt-4 inline-flex w-full justify-center rounded-md bg-slate-800  px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             Actions
             <ChevronDownIcon
               className="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
@@ -37,8 +84,8 @@ function MenuButton(pokemon) {
                       active ? 'bg-violet-500 text-white' : 'text-gray-900'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                     onClick={() => {
-                      console.log('release pokemon', pokemon.pokemon.id);
-                      releasePokemon({ id: pokemon?.pokemon?.id });
+                      console.log('release pokemon', pokemon.id);
+                      releasePokemon({ aid: pokemon?.aid });
                     }}
                   >
                     {active ? (
@@ -62,71 +109,41 @@ function MenuButton(pokemon) {
       </Menu>
     </div>
   );
-}
-
-function DeleteInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="6"
-        width="10"
-        height="10"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <path d="M3 6H17" stroke="#A78BFA" strokeWidth="2" />
-      <path d="M8 6V4H12V6" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function DeleteActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="6"
-        width="10"
-        height="10"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <path d="M3 6H17" stroke="#C4B5FD" strokeWidth="2" />
-      <path d="M8 6V4H12V6" stroke="#C4B5FD" strokeWidth="2" />
-    </svg>
-  );
-}
+};
 
 const PokemonListPage = () => {
-  const pokemonDetail = usePokemon((state: any) => state.pokemonDetail);
+  const [showList, setShowList] = useState(false);
   const myPokemonList = usePokemon((state: any) => state.myPokemonList);
-  console.log('myPokemonList ', myPokemonList);
+  useEffect(() => {
+    if (myPokemonList.length > 0) setShowList(true);
+  }, [myPokemonList]);
+
   return (
-    <>
-      <div>Pokemon List Page</div>
-      <div>Pokemon </div>
-      {myPokemonList.length > 0 &&
-        myPokemonList.map((pokemon: any, index: number) => (
-          <div key={`pokemon-${pokemon.name}-${index}`}>
-            <div>Pokemon Name: {pokemon.name}</div>
-            <div>Pokemon Nick Name: {pokemon.nickname}</div>
-            <MenuButton pokemon={pokemon} />
-          </div>
-        ))}
-    </>
+    <div>
+      <div className="mb-4 flex flex-row justify-between bg-slate-800 p-4">
+        <h1 className="font-bold text-white">My Pokemon List</h1>
+        <Link href={'/'}>Pokemon List</Link>
+      </div>
+      <div className="p-4">
+        <div className="md: flex flex-row flex-wrap items-center justify-center sm:justify-start ">
+          {showList &&
+            myPokemonList?.map((pokemon: Pokemon, index: number) => (
+              <div
+                key={`pokemon-${pokemon.name}-${index}`}
+                className="m-2 flex h-auto max-w-[300px] cursor-pointer flex-col items-center justify-center rounded-lg p-4 text-center shadow-md hover:shadow-lg"
+              >
+                <img
+                  src={pokemon?.sprites?.front_default}
+                  alt={pokemon?.name}
+                />
+                <div>Name: {pokemon.name}</div>
+                <div>Nickname: {pokemon.nickname}</div>
+                <MenuButton pokemon={pokemon} />
+              </div>
+            ))}
+        </div>
+      </div>
+    </div>
   );
 };
 export default PokemonListPage;
