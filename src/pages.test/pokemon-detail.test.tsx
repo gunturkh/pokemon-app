@@ -36,6 +36,5 @@ describe('Pokemon detail page', () => {
 
       expect(button).toBeInTheDocument();
     });
-
   });
 });

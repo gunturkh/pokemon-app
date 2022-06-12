@@ -26,6 +26,5 @@ describe('Pokemon detail page', () => {
 
       expect(link).toBeInTheDocument();
     });
-
   });
 });
